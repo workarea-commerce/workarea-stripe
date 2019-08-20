@@ -1,0 +1,12 @@
+.grid
+  .grid__cell
+    = all_payment_icons
+  .grid__cell.grid__cell--66-at-medium
+    .property
+      = label_tag 'credit_card[element]', nil, class: 'property__name' do
+        %span.property__requirement.property__requirement--required= t('workarea.storefront.forms.required')
+        %span.property__text= t('workarea.storefront.credit_cards.card_number')
+      .value
+        #card_element{ data: { stripe_card_input: '' } }
+          -# Stripe element will be inserted here
+        #card_errors.value__error{ role: 'alert' }

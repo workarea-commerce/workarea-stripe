@@ -1,0 +1,19 @@
+module Workarea
+  decorate Storefront::PlaceOrderIntegrationTest, with: :stripe do
+    def test_payment_error_handling
+      patch storefront.checkout_place_order_path,
+        params: {
+          payment: 'new_card',
+          credit_card: {
+            number: '2',
+            month:  1,
+            year:   2020,
+            cvv:    '999',
+            stripe_token: '2'
+          }
+        }
+      assert(response.ok?)
+      assert_match('Payment', response.body)
+    end
+  end
+end

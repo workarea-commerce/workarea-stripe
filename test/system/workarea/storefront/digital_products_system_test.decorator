@@ -1,0 +1,67 @@
+decorate Workarea::Storefront::DigitalProductsSystemTest, with: :stripe do
+  def fill_in_credit_card
+    page.driver.browser.switch_to.frame "stripe-payment-frame"
+
+    find('input[name="cardnumber"]').set('4111111111111111')
+    find('input[name="exp-date"]').set('12/21')
+    find('input[name="cvc"]').set('999')
+    find('input[name="postal"]').set('19143')
+
+    page.driver.browser.switch_to.default_content
+  end
+
+
+  def test_checking_out_with_a_digital_product
+    setup_checkout_specs
+
+    Workarea::Order.first.items.delete_all
+
+    product = create_product(
+      name: 'Digital Product',
+      digital: true,
+      variants: [
+        { sku: 'SKU1', regular: 10.to_m },
+        { sku: 'SKU2', regular: 15.to_m },
+        { sku: 'SKU3', regular: 25.to_m }
+      ]
+    )
+
+    visit storefront.product_path(product)
+
+    within '.product-details__add-to-cart-form' do
+      select product.skus.first, from: 'sku'
+      click_button t('workarea.storefront.products.add_to_cart')
+    end
+
+    assert(page.has_content?('Success'))
+
+    start_guest_checkout
+
+    assert_current_path(storefront.checkout_addresses_path)
+
+    fill_in_email
+    fill_in_billing_address
+    click_button t('workarea.storefront.checkouts.continue_to_payment')
+
+    assert_current_path(storefront.checkout_payment_path)
+    assert(page.has_content?('Success'))
+
+    fill_in_credit_card
+    click_button t('workarea.storefront.checkouts.place_order')
+
+    assert_current_path(storefront.checkout_confirmation_path)
+    assert(page.has_content?('Success'))
+    assert(page.has_content?(t('workarea.storefront.flash_messages.order_placed')))
+    assert(page.has_content?(Workarea::Order.first.id))
+
+    assert(page.has_content?('1019 S. 47th St.'))
+    assert(page.has_content?('Philadelphia'))
+    assert(page.has_content?('PA'))
+    assert(page.has_content?('19143'))
+
+    assert(page.has_content?('Visa'))
+
+    assert(page.has_content?('Digital Product'))
+    assert(page.has_content?('$10.00'))
+  end
+end

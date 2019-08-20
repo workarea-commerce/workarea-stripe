@@ -1,0 +1,10 @@
+module Workarea
+  decorate Storefront::Users::CreditCardsController, with: :stripe do
+    def credit_card_params
+      cc_params = super
+      cc_params.merge!(stripe_token: params["stripeToken"]) if params["stripeToken"].present?
+
+      cc_params
+    end
+  end
+end

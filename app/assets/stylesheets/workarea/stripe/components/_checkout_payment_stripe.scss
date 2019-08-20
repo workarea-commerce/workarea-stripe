@@ -1,0 +1,19 @@
+/*------------------------------------*\
+    #CHECKOUT-PAYMENT
+\*------------------------------------*/
+
+/**
+ * Extend the `.checkout-payment` class from Workarea to hide new card form and
+ * display the stripe payment form.
+ *
+ * This is not appended in test to allow base tests to run normally.
+ */
+.checkout-payment {}
+
+    .checkout-payment__primary-method {
+        display: none;
+    }
+
+    .checkout-payment__primary-method--stripe {
+        display: block;
+    }

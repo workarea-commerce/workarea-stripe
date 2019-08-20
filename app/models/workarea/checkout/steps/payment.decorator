@@ -1,0 +1,16 @@
+module Workarea
+  decorate Checkout::Steps::Payment, with: :stripe do
+    def set_credit_card(params)
+      payment.clear_credit_card
+      card_params = Checkout::CreditCardParams.new(params)
+
+      if card_params.stripe?
+        payment.set_credit_card(card_params.stripe_params)
+      elsif card_params.new? && card_params.number.present?
+        payment.set_credit_card(card_params.new_card)
+      elsif card_params.saved?
+        payment.set_credit_card(saved_card_id: card_params.saved_card_id)
+      end
+    end
+  end
+end

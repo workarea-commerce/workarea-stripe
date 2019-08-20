@@ -1,0 +1,26 @@
+module Workarea
+  decorate Storefront::Users::CreditCardsIntegrationTest, with: :stripe do
+    def test_adds_credit_cards
+      cc_params =  {
+          credit_card: {
+            first_name: 'Ben',
+            last_name: 'Crouse'
+          }
+        }.merge!("stripe_token" => 1)
+
+      post storefront.users_credit_cards_path,
+        params: cc_params
+
+      assert_redirected_to(storefront.users_account_path)
+
+      payment_profile = Payment::Profile.lookup(PaymentReference.new(@user))
+
+      credit_card = payment_profile.credit_cards.first
+      assert_equal('Ben', credit_card.first_name)
+      assert_equal('Crouse', credit_card.last_name)
+      assert_equal(1, credit_card.month)
+      assert_equal(2020, credit_card.year)
+      assert(credit_card.token.present?)
+    end
+  end
+end

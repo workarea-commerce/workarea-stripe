@@ -1,0 +1,20 @@
+module Workarea
+  decorate PaymentTest, with: :stripe do
+    def test_set_credit_card
+      payment = Payment.new
+      payment.set_credit_card(
+        number: '4111111111111111',
+        month: 1,
+        year: Time.current.year + 1,
+        cvv: '123',
+        amount: 1.to_m,
+        stripe_token: 'tok_123'
+      )
+
+      assert(payment.credit_card.present?)
+      assert(payment.credit_card.stripe_token.present?)
+      assert(payment.credit_card.errors.present?)
+    end
+  end
+end
+

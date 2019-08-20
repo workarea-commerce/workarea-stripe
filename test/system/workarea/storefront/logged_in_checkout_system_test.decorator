@@ -1,0 +1,5 @@
+decorate Workarea::Storefront::LoggedInCheckoutSystemTest, with: :stripe do
+  def test_failed_payment_authorization
+    skip 'Stripe always returns a valid payment token'
+  end
+end

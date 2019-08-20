@@ -1,0 +1,21 @@
+module Workarea
+  decorate Checkout::Steps::PaymentTest, with: :stripe do
+    def test_update
+      assert(
+        step.update(
+          "payment" => 'new_card',
+          "stripeToken" => '1'
+        )
+      )
+
+      assert(payment.credit_card.present?)
+      assert(payment.credit_card.amount)
+
+      step.update
+      assert(payment.credit_card.nil?)
+
+      payment.address = nil
+      refute(step.update)
+    end
+  end
+end

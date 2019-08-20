@@ -1,0 +1,27 @@
+module Workarea
+  decorate Payment::Tender::CreditCard, Payment::SavedCreditCard, with: :stripe do
+    decorated do
+      field :stripe_token, type: String
+    end
+
+    def stripe?
+      stripe_token.present?
+    end
+
+    def set_display_number
+      if !stripe? && number.present?
+        self.display_number = ActiveMerchant::Billing::CreditCard.mask(number)
+      end
+    end
+
+    def set_issuer
+      if !stripe? && number.present?
+        brand = ActiveMerchant::Billing::CreditCard.brand?(number)
+
+        if brand.present?
+          self.issuer = Workarea.config.credit_card_issuers[brand].to_s
+        end
+      end
+    end
+  end
+end

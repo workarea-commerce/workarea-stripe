@@ -1,0 +1,29 @@
+(function () {
+    'use strict';
+
+    /**
+     * Config Variables
+     */
+
+    WORKAREA.config.stripe = {
+        publicKey: '<%= Workarea.config.stripe[:public_key] %>',
+        cardStyles : {
+            base: {
+                color: "#32325d",
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
+            }
+        },
+        bogusToken: {
+            'id': 'tok_1DCtE5DDRzjJ0gxwvRPfQ57m'
+        }
+    };
+})();

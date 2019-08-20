@@ -1,0 +1,24 @@
+module Workarea
+  decorate Payment::Authorize::CreditCard, with: :stripe do
+    def transaction_options
+      {
+        customer:  tender.payment.profile.gateway_id,
+        description: order_content
+      }
+    end
+
+    private
+
+    def order
+      @order ||= Workarea::Order.find(tender.payment.id)
+    end
+
+    def order_content
+      @order_content ||= begin
+        contents = order.items.map(&:sku).join(',')
+        "Env: #{Rails.env}, Items: #{contents}"
+      end
+    end
+
+  end
+end

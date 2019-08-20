@@ -1,0 +1,54 @@
+module Workarea
+  decorate Payment::StoreCreditCard, with: :stripe do
+    def perform!
+      return true if @credit_card.token.present?
+
+      response = handle_active_merchant_errors do
+        gateway.store(@credit_card.stripe_token, store_options)
+      end
+
+      params = response.params
+
+      stripe_source = card_details(params)
+
+      # workarea does not have access to the payment form
+      # to get the cc information because it is hosted by stripe.
+      # Add the information to the credit card that is
+      # returned from the tokenization request.
+      update_credit_card(stripe_source)
+
+      # store the customer ID on the profile
+      if @credit_card.profile.gateway_id.blank?
+        @credit_card.profile.gateway_id = response.params["id"]
+        @credit_card.profile.save!
+      end
+
+      response.success?
+    end
+
+    private
+
+    def store_options
+      {
+        email: @credit_card.profile.email,
+        customer: @credit_card.profile.gateway_id
+      }
+    end
+
+    def card_details(params)
+      if params["sources"].present?
+        params["sources"]["data"].first
+      else
+        params
+      end
+    end
+
+    def update_credit_card(stripe_source)
+      @credit_card.display_number = stripe_source["last4"]
+      @credit_card.month = stripe_source["exp_month"]
+      @credit_card.year = stripe_source["exp_year"]
+      @credit_card.issuer = stripe_source["brand"]
+      @credit_card.token = stripe_source["id"]
+    end
+  end
+end

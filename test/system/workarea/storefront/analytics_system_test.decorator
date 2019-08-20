@@ -1,0 +1,5 @@
+decorate Workarea::Storefront::AnalyticsSystemTest, with: :stripe do
+  def test_announcing_validation_errors
+    skip 'The elements JS will always return a valid token'
+  end
+end

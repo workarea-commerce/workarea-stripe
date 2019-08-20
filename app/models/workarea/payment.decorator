@@ -1,0 +1,18 @@
+module Workarea
+  decorate Payment, with: :stripe do
+    def set_credit_card(attrs)
+      build_credit_card unless credit_card
+      credit_card.saved_card_id = nil
+      credit_card.attributes = attrs.slice(
+        :month,
+        :year,
+        :saved_card_id,
+        :number,
+        :cvv,
+        :amount,
+        :stripe_token
+      )
+      save
+    end
+  end
+end

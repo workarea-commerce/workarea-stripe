@@ -1,0 +1,30 @@
+module Workarea
+  decorate Checkout::CreditCardParams, with: :stripe do
+
+    # HACK ALERT:
+    # Stripe does not give enough data to persist a credit card
+    # To get around this set fake data which is then updated
+    # when the card is stored on the gateway
+    def stripe_params
+      {
+       stripe_token: params["stripeToken"],
+       number: '4111111111111111',
+       display_number: '1111',
+       year:  Time.current.year + 1,
+       month:  Time.current.month,
+       first_name: 'stub',
+       last_name: 'stub',
+       cvv: '000'
+
+      }
+    end
+
+    def stripe_token
+      params["stripeToken"]
+    end
+
+    def stripe?
+      params["stripeToken"].present?
+    end
+  end
+end

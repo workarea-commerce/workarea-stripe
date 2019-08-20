@@ -1,0 +1,20 @@
+module Workarea
+  decorate Payment::Refund::CreditCardTest, with: :stripe do
+    def payment
+      @payment ||=
+        begin
+          profile = create_payment_profile
+          order = create_order
+          result = create_payment(id: order.id, profile: profile)
+          result.set_credit_card(
+            number: 1,
+            month: 1,
+            year: Time.current.year + 1,
+            cvv: 999
+          )
+
+          result
+        end
+    end
+  end
+end

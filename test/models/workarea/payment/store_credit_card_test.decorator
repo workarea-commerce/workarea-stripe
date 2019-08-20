@@ -1,0 +1,9 @@
+module Workarea
+  decorate Payment::StoreCreditCardTest, with: :stripe do
+    def test_perform_sets_the_gateway_id
+      credit_card.token = nil
+      Workarea::Payment::StoreCreditCard.new(credit_card).perform!
+      assert(credit_card.profile.gateway_id.present?, 'expected gateway ID to be present on profile')
+    end
+  end
+end

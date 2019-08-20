@@ -1,0 +1,5 @@
+decorate Workarea::Storefront::NoJsSystemTest, with: :stripe do
+  def test_successfully_completing_checkout
+    skip 'Stripe will not work without javascript.'
+  end
+end

@@ -1,0 +1,42 @@
+- @title = t('workarea.storefront.users.add_credit_card')
+- params[:credit_card] ||= {}
+
+- content_for :breadcrumbs do
+  %p.breadcrumbs__node-group
+    %span.breadcrumbs__node{ itemprop: 'breadcrumb' }
+      = link_to t('workarea.storefront.layouts.home'), root_path, rel: 'home', class: 'breadcrumbs__link'
+    %span.breadcrumbs__node{ itemprop: 'breadcrumb' }
+      = link_to t('workarea.storefront.users.account'), users_account_path, class: 'breadcrumbs__link'
+    %span.breadcrumbs__node{ itemprop: 'breadcrumb' }
+      %span.breadcrumbs__text= t('workarea.storefront.users.add_credit_card')
+
+.view
+
+  %h1= t('workarea.storefront.users.add_credit_card')
+
+  - if @credit_card && @credit_card.errors.any?
+    - @credit_card.errors.full_messages.each do |message|
+      = render_message 'error', message, data: { analytics: validation_error_analytics_data('users').to_json }
+
+
+  = form_tag users_credit_cards_path, method: 'post', id: 'credit_card_form', data: { single_submit_form: '', stripe_payment_form: '' } do
+    .grid
+      .grid__cell.grid__cell--50-at-medium
+        .property.property--responsive
+          = label_tag 'credit_card[first_name]', nil, class: 'property__name' do
+            %span.property__text= t('workarea.storefront.users.first_name')
+          .value= text_field_tag 'credit_card[first_name]', params[:credit_card][:first_name], class: 'text-box', autocorrect: 'off', autocomplete: 'given-name', required: true
+
+      .grid__cell.grid__cell--50-at-medium
+        .property.property--responsive
+          = label_tag 'credit_card[last_name]', nil, class: 'property__name' do
+            %span.property__text= t('workarea.storefront.users.last_name')
+          .value= text_field_tag 'credit_card[last_name]', params[:credit_card][:last_name], class: 'text-box', autocorrect: 'off', autocomplete: 'family-name', required: true
+
+      .grid__cell
+        = render 'workarea/storefront/users/credit_cards/stripe_form'
+
+      .grid__cell
+        .grid.grid--auto
+          %p.grid__cell= button_tag t('workarea.storefront.forms.save'), value: 'save_credit_card', class: 'button'
+          %p.grid__cell= link_to t('workarea.storefront.forms.cancel'), users_account_path, class: "text-button", data: { dialog_close_button: '' }

@@ -1,0 +1,25 @@
+module Workarea
+  decorate Payment::Purchase::CreditCardTest, with: :stripe do
+    def payment
+      @payment ||=
+        begin
+          profile = create_payment_profile
+          order = create_order
+          create_payment(
+            id: order.id,
+            profile_id: profile.id,
+            address: {
+              first_name: 'Ben',
+              last_name: 'Crouse',
+              street: '22 s. 3rd st.',
+              city: 'Philadelphia',
+              region: 'PA',
+              postal_code: '19106',
+              country: Country['US']
+            }
+          )
+        end
+    end
+
+  end
+end

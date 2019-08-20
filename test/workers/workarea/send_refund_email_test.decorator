@@ -1,0 +1,29 @@
+module Workarea
+  decorate SendRefundEmailTest, with: :stripe do
+    def payment
+      @payment ||= begin
+        profile = create_payment_profile
+        payment = create_payment(id: order.id, profile_id: profile.id)
+        payment.set_address(
+          first_name: 'Ben',
+          last_name: 'Crouse',
+          street: '22 S. 3rd St.',
+          city: 'Philadelphia',
+          region: 'PA',
+          postal_code: '19106',
+          country: 'US',
+          phone_number: '2159251800'
+        )
+
+        payment.set_credit_card(
+          number: '1',
+          month: 1,
+          year: Time.current.year + 1,
+          cvv: '999',
+          amount: 5.to_m
+        )
+        payment
+      end
+    end
+  end
+end

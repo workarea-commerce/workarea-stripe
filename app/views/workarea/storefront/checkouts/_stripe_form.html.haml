@@ -1,0 +1,19 @@
+.checkout-payment__primary-method.checkout-payment__primary-method--stripe{ class: @step.using_new_card? ? 'checkout-payment__primary-method--selected': nil}
+  .button-property
+    .value
+      = radio_button_tag 'payment', 'stripe', @step.using_new_card?, data: { analytics: checkout_payment_selected_analytics_data('stripe').to_json }
+    = label_tag 'payment[stripe]', nil, class: 'button-property__name' do
+      %span.button-property__text= t('workarea.storefront.checkouts.new_credit_card')
+  %p.checkout-payment__primary-method-description
+    = all_payment_icons
+  .checkout-payment__primary-method-edit
+    .grid
+      .grid__cell.grid__cell--66-at-medium
+        .property
+          = label_tag 'credit_card[element]', nil, class: 'property__name' do
+            %span.property__requirement.property__requirement--required= t('workarea.storefront.forms.required')
+            %span.property__text= t('workarea.storefront.credit_cards.card_number')
+          .value
+            #card_element{ data: { stripe_card_input: '' } }
+              -# Stripe element will be inserted here
+            #card_errors.value__error{ role: 'alert' }

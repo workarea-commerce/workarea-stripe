@@ -1,0 +1,10 @@
+module Workarea
+  decorate Payment::RefundTest, with: :stripe do
+    def payment
+      @payment ||= begin
+        order = create_order
+        create_payment(id: order.id, profile: profile)
+      end
+    end
+  end
+end
