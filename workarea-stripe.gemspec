@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Jeff Yucis"]
   s.email       = ["jyucis@weblinc.com"]
   s.homepage    = "https://github.com/workarea-commerce/workarea-stripe"
-  s.summary     = "Stripe Payment Processor"
-  s.description = "Stripe Payment Processor for Credit Cards"
+  s.summary     = "Stripe payment processor integration for the Workarea Commerce Platform"
+  s.description = "Stripe payment processor integration for the Workarea Commerce Platform"
 
   s.files = `git ls-files`.split("\n")
 
