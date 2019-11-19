@@ -10,7 +10,6 @@ decorate Workarea::Storefront::DigitalProductsSystemTest, with: :stripe do
     page.driver.browser.switch_to.default_content
   end
 
-
   def test_checking_out_with_a_digital_product
     setup_checkout_specs
 
@@ -59,7 +58,7 @@ decorate Workarea::Storefront::DigitalProductsSystemTest, with: :stripe do
     assert(page.has_content?('PA'))
     assert(page.has_content?('19143'))
 
-    assert(page.has_content?('Visa'))
+    assert(page.has_content?('Test Card'))
 
     assert(page.has_content?('Digital Product'))
     assert(page.has_content?('$10.00'))

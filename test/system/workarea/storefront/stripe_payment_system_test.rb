@@ -79,7 +79,7 @@ module Workarea
         assert(page.has_content?('PA'))
         assert(page.has_content?('19143'))
 
-        assert(page.has_content?('Visa'))
+        assert(page.has_content?('Test Card'))
         assert(page.has_content?('1111'))
 
         assert(page.has_content?(instruction))

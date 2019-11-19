@@ -1,0 +1,61 @@
+module Workarea
+  decorate Storefront::DownloadSystemTest, with: :stripe do
+    def test_checking_out_with_downloadable_product
+      setup_checkout_specs
+
+      Order.first.items.delete_all
+
+      product = create_product(
+        name: 'Digital Product',
+        variants: [
+          { sku: 'SKU1', regular: 10.to_m, tax_code: '001' },
+          { sku: 'SKU2', regular: 15.to_m, tax_code: '001' }
+        ]
+      )
+
+      create_fulfillment_sku(id: 'SKU1', policy: :download, file: product_image_file)
+      create_fulfillment_sku(id: 'SKU2', policy: :download, file: product_image_file)
+
+      visit storefront.product_path(product)
+
+      within '.product-details__add-to-cart-form' do
+        select product.skus.first, from: 'sku'
+        click_button t('workarea.storefront.products.add_to_cart')
+      end
+
+      assert(page.has_content?('Success'))
+
+      start_guest_checkout
+
+      assert_current_path(storefront.checkout_addresses_path)
+
+      fill_in_email
+      fill_in_billing_address
+      click_button t('workarea.storefront.checkouts.continue_to_payment')
+
+      assert_current_path(storefront.checkout_payment_path)
+      assert(page.has_content?('Success'))
+
+      fill_in_credit_card
+      click_button t('workarea.storefront.checkouts.place_order')
+
+      assert_current_path(storefront.checkout_confirmation_path)
+      assert(page.has_content?('Success'))
+      assert(page.has_content?(t('workarea.storefront.flash_messages.order_placed')))
+      assert(page.has_content?(Order.first.id))
+
+      assert(page.has_content?('1019 S. 47th St.'))
+      assert(page.has_content?('Philadelphia'))
+      assert(page.has_content?('PA'))
+      assert(page.has_content?('19143'))
+
+      assert(page.has_content?('Test Card'))
+
+      assert(page.has_content?('Digital Product'))
+      assert(page.has_content?('$10.00'))
+      assert(page.has_content?('$0.70'))
+      assert(page.has_content?('$10.70'))
+      assert(page.has_content?(t('workarea.storefront.orders.download')))
+    end
+  end
+end
