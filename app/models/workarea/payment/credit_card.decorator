@@ -23,5 +23,10 @@ module Workarea
         end
       end
     end
+
+    def issuer_accepted
+      return if stripe?
+      super
+    end
   end
 end
