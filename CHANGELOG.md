@@ -1,3 +1,20 @@
+Workarea Stripe 1.1.0 (2019-11-26)
+--------------------------------------------------------------------------------
+
+*   Remove decorator for test that was removed in base
+
+    Ben Crouse
+
+*   Update credit card issuer validation to allow strip tokens
+
+    Jeff Yucis
+
+*   Update README
+
+    Matt Duffy
+
+
+
 Workarea Stripe 1.0.0 (2019-08-21)
 --------------------------------------------------------------------------------
 
