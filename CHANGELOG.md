@@ -1,3 +1,13 @@
+Workarea Stripe 1.1.2 (2020-02-05)
+--------------------------------------------------------------------------------
+
+*   Fix bogus gateway response data
+
+    Update date returned by store operation to be the current year plus 1
+    Jason Hummel
+
+
+
 Workarea Stripe 1.1.1 (2020-01-21)
 --------------------------------------------------------------------------------
 
